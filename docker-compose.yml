@@ -1,0 +1,73 @@
+# docker-compose (compose spec, no version field needed)
+
+services:
+  ganache:
+    image: trufflesuite/ganache:latest
+    ports:
+      - "8545:8545"
+    command: ["--mnemonic", "monkey salad lucky arctic space crack hope maze point sun group merit", "--port", "8545", "--host", "0.0.0.0"]
+    networks:
+      - hackathon-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: hackathon_user
+      POSTGRES_PASSWORD: hackathon_password
+      POSTGRES_DB: hackathon_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hackathon_user -d hackathon_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - hackathon-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DATABASE_URL=postgres://hackathon_user:hackathon_password@db:5432/hackathon_db
+      - GANACHE_URL=http://ganache:8545
+      - FIREBASE_SERVICE_ACCOUNT_PATH=/app/config/firebase-service-account.json
+    depends_on:
+      db:
+        condition: service_healthy
+      ganache:
+        condition: service_started
+    networks:
+      - hackathon-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
+      - NEXT_PUBLIC_GANACHE_URL=http://localhost:8545
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - hackathon-network
+
+  ai-service:
+    build: ./ai-models
+    ports:
+      - "8000:8000"
+    networks:
+      - hackathon-network
+
+networks:
+  hackathon-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
