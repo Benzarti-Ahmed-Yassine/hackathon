@@ -137,13 +137,34 @@ app.post('/api/saeg/audit', async (req, res) => {
     );
 
     // 4. Record on Blockchain (Mocking for now, as address needs to be deployed)
-    // In real use, we would call saegContract.updateIPT(companyWallet, iptScore * 100)
     console.log(`[Blockchain] Recording IPT ${iptScore} for company ${company_id}`);
+
+    // 5. Generate AI Action Plan via Ollama
+    let actionPlan = "Génération du plan en cours...";
+    try {
+      const aiResponse = await fetch(`${AI_SERVICE_URL}/action-plan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ipt_score: iptScore,
+          classification,
+          anomaly_risk: classification === 'ROUGE' || classification === 'NOIR', // Simplified logic
+          sensor_type: 'Audit Global',
+          recent_trend: [iptScore]
+        })
+      });
+      const aiData = await aiResponse.json();
+      actionPlan = aiData.action_plan || "Désolé, l'IA n'a pas pu générer de plan.";
+    } catch (e) {
+      console.warn("Ollama Action Plan failed:", e.message);
+      actionPlan = "Service Ollama indisponible pour le moment.";
+    }
 
     res.json({
       status: 'SUCCESS',
       ipt_score: iptScore,
       classification,
+      action_plan: actionPlan,
       db_record: dbResult.rows[0]
     });
   } catch (error) {

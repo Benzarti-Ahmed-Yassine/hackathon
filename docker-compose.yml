@@ -62,8 +62,12 @@ services:
     build: ./ai-models
     ports:
       - "8000:8000"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
     networks:
       - hackathon-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   hackathon-network:
