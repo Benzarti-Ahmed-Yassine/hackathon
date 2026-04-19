@@ -11,12 +11,49 @@ EcoTextil est une plateforme intégrée conçue pour résoudre la crise environn
 - **🧠 Expert Réglementaire (Groq)** : Génération de recommandations et de plans d'actions ancrés dans les directives de l'ANPE et de l'ONAS.
 - **📊 Design "Clean-Eco"** : Interface de contrôle épurée avec vue 3D intégrée.
 
-## 🏗️ Architecture du Système
+## 🏗️ Architecture Globale du Système
 
-- **Frontend** : Next.js (React), rendu 3D (React Three Fiber)
-- **Backend / IA** : FastAPI (Python), XGBoost, OpenCV, Ultralytics YOLOv11
-- **Données** : Datasets fusionnés depuis *Copernicus*, *Dryad*, *UCI* et *FAO* (Voir `SOURCES.md`)
-- **Orchestration** : Docker & Docker Compose
+Le système **SAEG Monastir** utilise une architecture en couches pour garantir la performance de l'IA et l'immuabilité de la Blockchain.
+
+```mermaid
+graph TD
+    subgraph "Data Acquisition"
+        A[IoT Sensors: pH, Pb, PM2.5] -->|Real-time| B(Node.js Backend)
+        C[Sentinel-2 Satellite] -->|Multispectral TIFF| D(FastAPI AI Service)
+    end
+
+    subgraph "Hybrid AI Processing"
+        D -->|Vision Audit| E[YOLOv11 Engine]
+        B -->|Sensor Stream| F[XGBoost Engine]
+        E -->|Decision Fusion| G[Multimodal Risk Index]
+        F -->|Decision Fusion| G
+    end
+
+    subgraph "Governance & Strategy"
+        G -->|Verified Audit| H[Groq Llama-3 Specialist]
+        H -->|Action Plan| I[Industrial Dashboard]
+        G -->|On-Chain Event| J[Ethereum Smart Contract]
+    end
+
+    subgraph "Fiscal Enforcement"
+        J -->|Automated Tax| K[Digital Wallet]
+    end
+```
+
+## ⚙️ Pipeline Technique & Fusion Multimodale
+
+### 1. Détection de Risque (XGBoost)
+L'architecture **XGBoost** (Gradient Boosted Trees) est utilisée pour traiter les données tabulaires massives provenant des capteurs. 
+- **Fonction** : Il analyse les séries temporelles pour prédire les dépassements de seuils critiques avant qu'ils ne surviennent. 
+- **Précision** : Contrairement aux alertes classiques, XGBoost gère les corrélations non-linéaires entre plusieurs polluants (ex: l'effet combiné du pH et du Plomb sur la toxicité de l'eau).
+
+### 2. Validation Visuelle (YOLOv11)
+L'architecture **YOLOv11** (Real-Time Object Detection) effectue un "Audit de Surface" via l'imagerie Sentinel-2.
+- **Fonction** : Détection des panaches de pollution thermique ou colorée et identification des vaisseaux suspects.
+- **Fusion** : Si XGBoost détecte une anomalie chimique et que YOLO confirme une tache sombre sur le littoral, l'indice de risque passe immédiatement à **NOIR** (Urgence absolue).
+
+### 3. Synthèse Actionnable (Groq & Blockchain)
+Le résultat fusionné est envoyé à **Groq (Llama-3)** qui agit comme un consultant ANPE virtuel pour rédiger le plan d'action. Simultanément, la transaction est scellée sur la **Blockchain**, déclenchant la fiscalité environnementale.
 
 ## 📐 Algorithme de Transparence & Fiscalité Blockchain
 

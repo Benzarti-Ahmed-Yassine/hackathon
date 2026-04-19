@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
 const { ethers } = require('ethers');
-const admin = require('firebase-admin');
-const fs = require('fs');
 const path = require('path');
 
 require('dotenv').config();
@@ -28,22 +26,6 @@ const ioTDamemon = new IoTSimulator(GANACHE_URL, AI_SERVICE_URL);
 
 // Start the 5-sec simulation loop for Hackathon Demo
 ioTDamemon.start();
-
-// --- FIREBASE INITIALIZATION ---
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || './config/firebase-service-account.json';
-
-try {
-  if (fs.existsSync(serviceAccountPath)) {
-    admin.initializeApp({
-      credential: admin.credential.cert(require(path.resolve(serviceAccountPath)))
-    });
-    console.log('✅ Firebase Admin initialized successfully');
-  } else {
-    console.warn('⚠️ Firebase service account file not found. Firestore features will be disabled.');
-  }
-} catch (error) {
-  console.error('❌ Failed to initialize Firebase:', error.message);
-}
 
 // --- DATABASE INITIALIZATION with RETRY ---
 const pool = new Pool({
@@ -99,7 +81,6 @@ discoveryWithRetry();
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
-    firebase: !!admin.apps.length,
     blockchain: !!systemAccount 
   });
 });
