@@ -18,6 +18,32 @@ EcoTextil est une plateforme intégrée conçue pour résoudre la crise environn
 - **Données** : Datasets fusionnés depuis *Copernicus*, *Dryad*, *UCI* et *FAO* (Voir `SOURCES.md`)
 - **Orchestration** : Docker & Docker Compose
 
+## 📐 Algorithme de Transparence & Fiscalité Blockchain
+
+Le système **SAEG Monastir** repose sur une preuve mathématique et immuable pour l'audit environnemental.
+
+### ⚡ Calcul de l'Indice de Performance Toxique (IPT)
+L'IPT est calculé dynamiquement par le moteur backend selon la formule normalisée suivante :
+
+$$IPT = (CO_2 \times 0.25) + (Vol. Eau \times Indice Toxicité \times 0.50) + (Déchets \times 0.25)$$
+
+**Classifications :**
+- 🟢 **VERT (< 50)** : Conforme aux normes environnementales.
+- 🟠 **ORANGE (50 - 100)** : Avertissement technique, inspection recommandée.
+- 🔴 **ROUGE (100 - 150)** : Risque élevé, déclenchement du protocole de remédiation.
+- ⚫ **NOIR (> 150)** : Violation critique, pénalités maximales.
+
+### ⛓️ Pourquoi la Blockchain ?
+L'intégration de la blockchain (Ethereum/Ganache) n'est pas seulement technologique, elle est **légale et fiscale** :
+1. **Immuabilité** : Une fois l'audit IoT/Satellite validé, le score IPT est inscrit sur le Smart Contract. Il devient impossible pour une entreprise de falsifier ses registres de pollution après coup.
+2. **Automatisation (Smart Tax)** : Le contrat intelligent calcule automatiquement la taxe écologique sans intervention humaine biaisée.
+3. **Transparence** : Les autorités et les citoyens peuvent vérifier en temps réel si les usines respectent leurs quotas.
+
+### 💰 Frais de Paiement (Pollueur-Payeur)
+Conformément au principe du pollueur-payeur, chaque infraction génère une taxe immédiate :
+- **Frais** : `Score IPT × 0.05 ETH`
+- **Exécution** : Le paiement est traité via des transactions Web3, assurant que les fonds de compensation environnementale sont collectés sans délai administratif.
+
 ## 📦 Installation et Lancement
 
 ### 1. Prérequis
