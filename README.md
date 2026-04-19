@@ -1,81 +1,48 @@
-J'ai rédigé un **README.md** professionnel et complet à la racine de votre projet. Il présente le projet **SAEG Monastir**, son architecture innovante (IA + Blockchain), et comment le lancer étape par étape.
+# 🌍 EcoTextil Monastir: Système Hybride d'Audit Environnemental
 
-### 📄 Création du README.md
-J'ai inclus les éléments suivants dans le fichier :
-*   **Vision du Projet** : Transformer la fiscalité en levier écologique.
-*   **Architecture Technique** : Le flux de données entre les capteurs, l'IA LSTM, la Blockchain et le Dashboard.
-*   **Installation Rapide** : Toutes les commandes Docker et Hardhat.
-*   **Guide de Test** : Les scénarios que nous avons validés ensemble.
+**Projet Hackathon IA & Environnement** - *Surveillance multi-domaine (Eau, Air, Sol) pour le corridor textile Monastir-Mahdia.*
 
----
-
-```markdown
-# 🌍 SAEG Monastir : Système d'Audit Environnemental Global
-
-**Projet Hackathon IA & Environnement** - *Transformer la fiscalité environnementale en levier de mutation industrielle.*
-
-Le SAEG est une plateforme intégrée conçue pour résoudre la crise environnementale liée à l'industrie textile dans la région de Monastir (Tunisie). Il combine l'**IA Prédictive (LSTM)** pour la surveillance et la **Blockchain (Ethereum)** pour une fiscalité transparente et automatisée.
+EcoTextil est une plateforme intégrée conçue pour résoudre la crise environnementale liée à l'industrie textile en Tunisie. Ce projet combine une **IA Hybride (XGBoost + YOLOv11)** pour l'évaluation des risques et un LLM souverain (**Groq**) pour la génération de plans d'action basés sur la norme tunisienne NT 106.02.
 
 ## 🚀 Fonctionnalités Clés
 
-- **🧪 Calcul IPT (Indice de Pollution Textile)** : Un score composite basé sur le CO₂, la toxicité de l'eau et les déchets.
-- **🤖 Prédiction IA (LSTM)** : Un service dédié qui anticipe les pics de pollution avant qu'ils ne surviennent.
-- **⛓️ Gouvernance Blockchain** : Inscription immuable des audits et prélèvement automatique des taxes en ETH via Smart Contracts.
-- **🏢 Ateliers Mutualisés (AMT)** : Un cadre pour régulariser le secteur informel via des équipements partagés.
+- **🧪 Audit Multi-Domaine** : Analyse de données tabulaires sur la qualité de l'eau, de l'air (PM2.5, NO2) et du sol (Plomb, Cadmium) via **XGBoost**.
+- **👁️ Vision Multispectrale** : Analyse d'images satellites (Sentinel-3) avec **YOLOv11** pour la détection de panaches de pollution et le déversement de colorants.
+- **🧠 Expert Réglementaire (Groq)** : Génération de recommandations et de plans d'actions ancrés dans les directives de l'ANPE et de l'ONAS.
+- **📊 Design "Clean-Eco"** : Interface de contrôle épurée avec vue 3D intégrée.
 
 ## 🏗️ Architecture du Système
 
-```mermaid
-graph LR
-    A[Capteurs IoT] --> B[Backend Node.js]
-    B <--> C[IA Service: LSTM]
-    B --> D[(PostgreSQL)]
-    B --> E[Blockchain: Ganache]
-    E --> F[Fonds Dépollution FDT]
-```
-
-## 🛠️ Stack Technique
-
-- **Frontend** : Next.js (React)
-- **Backend** : Node.js (Express)
-- **IA** : FastAPI (Python) + Modèle LSTM (Simulation)
-- **Blockchain** : Hardhat + Solidity + Ganache
-- **Database** : PostgreSQL
-- **Orchestration** : Docker Compose
+- **Frontend** : Next.js (React), rendu 3D (React Three Fiber)
+- **Backend / IA** : FastAPI (Python), XGBoost, OpenCV, Ultralytics YOLOv11
+- **Données** : Datasets fusionnés depuis *Copernicus*, *Dryad*, *UCI* et *FAO* (Voir `SOURCES.md`)
+- **Orchestration** : Docker & Docker Compose
 
 ## 📦 Installation et Lancement
 
 ### 1. Prérequis
 - Docker & Docker Compose
-- Node.js & npm
+- Node.js & npm (pour le developpement Frontend)
 
 ### 2. Démarrer l'infrastructure
+L'intégralité du système (Base de données, Frontend, et le conteneur IA) se lance via Docker Compose :
 ```powershell
 docker-compose up -d --build
 ```
 
-### 3. Déployer les Smart Contracts
+### 3. Entraînement Initial de l'IA (Auto-ML)
+La plateforme intègre une fonctionnalité d'entraînement dynamique. Pour que l'IA XGBoost apprenne les spécificités du sol, de l'air et de l'eau de Monastir, exécutez la commande suivante (ou utilisez le bouton "Train" du Dashboard) :
 ```powershell
-cd blockchain
-npx hardhat run scripts/deploy_saeg.js --network localhost
+Invoke-RestMethod -Uri http://localhost:8000/train-xgboost -Method Post
 ```
+*Cette action demandera au **ai-service** de lire les données unifiées, de générer le modèle `xgboost_ecotextil.json` et de le charger en direct.*
 
-## 🧪 Tester les Scénarios
+## 🧪 Tester l'IA Hybride
 
-Vous pouvez tester le moteur d'audit et l'IA en utilisant les commandes documentées dans le [**Guide des Scénarios**](./brain/db467fb3-b30f-45a0-a50b-6e3b3934c347/scenarios_guide.md).
-
-### Exemple de test IA :
+Pour évaluer un risque environnemental en envoyant des mesures de capteurs :
 ```powershell
-Invoke-RestMethod -Uri http://localhost:8000/predict -Method Post -ContentType "application/json" -Body '{"history": [6.5, 6.7, 7.2, 8.5, 9.2], "sensor_type": "pH"}'
+Invoke-RestMethod -Uri http://localhost:8000/predict-hybrid -Method Post -ContentType "application/json" -Body '{"tabular_data": {"pH": 9.5, "Lead_Pb": 120, "PM2.5": 85}, "image_b64": ""}'
 ```
-
-## 📈 Impact Attendu (Horizon 2030)
-- **Unités connectées** : 100%
-- **Eau recyclée** : >90% (Objectif ZLD)
-- **Nappe phréatique** : Stabilisation et remédiation.
 
 ---
-*Phrase d'impact : "Transformer la fiscalité environnementale en levier de mutation industrielle, non en instrument de punition."*
-```
-
-J'ai déposé ce fichier à la racine de votre dossier `Hackathon`. **C'est une base solide pour votre présentation lors du Hackathon !**
+*Développé pour protéger le corridor textile de Monastir-Mahdia.*

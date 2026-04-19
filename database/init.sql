@@ -31,10 +31,14 @@ CREATE TABLE IF NOT EXISTS companies (
     wallet_address TEXT UNIQUE -- Company ETH wallet for tax collection
 );
 
+CREATE TYPE sensor_category AS ENUM ('WATER', 'AIR', 'SOIL');
+
 CREATE TABLE IF NOT EXISTS sensor_definitions (
     id SERIAL PRIMARY KEY,
-    type TEXT NOT NULL, -- CO2, pH, BOD, Metal, WaterVolume
-    unit TEXT NOT NULL
+    name VARCHAR(50) NOT NULL,
+    unit VARCHAR(20),
+    category sensor_category DEFAULT 'WATER',
+    description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS sensors (
@@ -57,12 +61,14 @@ CREATE TABLE IF NOT EXISTS ipt_records (
 );
 
 -- Initial Mock Data for SAEG
-INSERT INTO sensor_definitions (type, unit) VALUES 
-('CO2', 'kg/t'),
-('pH', 'pH'),
-('BOD', 'mg/l'),
-('WaterVolume', 'm3'),
-('Waste', 'kg')
+INSERT INTO sensor_definitions (name, unit, category, description) VALUES
+('pH', 'pH', 'WATER', 'Acidité/Alcalinité de l''effluent'),
+('Conductivité', 'µS/cm', 'WATER', 'Salinité liée aux procédés de teinture'),
+('DCO', 'mg/L', 'WATER', 'Demande Chimique en Oxygène'),
+('PM2.5', 'µg/m³', 'AIR', 'Particules fines issues des chaudières industrielles'),
+('NO2', 'ppb', 'AIR', 'Dioxyde d''Azote (gaz de combustion)'),
+('Plomb (Pb)', 'mg/kg', 'SOIL', 'Présence de métaux lourds dans les boues'),
+('Cadmium (Cd)', 'mg/kg', 'SOIL', 'Contamination par pigments et stabilisants')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO companies (name, location, classification, wallet_address) VALUES 

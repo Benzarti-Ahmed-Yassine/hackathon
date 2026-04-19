@@ -1,113 +1,109 @@
 'use client'
 
 import React, { useState } from 'react'
-import Scene from '@/components/Scene'
 import Sidebar from '@/components/Sidebar'
+import dynamic from 'next/dynamic'
+
+// Dynamically import Map with SSR disabled
+const MapMonastir = dynamic(() => import('@/components/MapMonastir'), { ssr: false })
+const Scene = dynamic(() => import('@/components/Scene'), { ssr: false })
 
 export default function Home() {
   const [activeNode, setActiveNode] = useState<string | null>(null)
+  const [activeFactory, setActiveFactory] = useState<any>(null)
 
   return (
-    <main className="min-h-screen bg-white flex flex-col relative overflow-hidden">
-      {/* Sidebar Component */}
-      <Sidebar activeNode={activeNode} onClose={() => setActiveNode(null)} />
-
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 right-0 w-[50vw] h-[100vh] bg-emerald-50/50 rounded-l-[100px] -z-10" />
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-100/20 rounded-full blur-3xl -z-10" />
-
-      {/* ── Navigation / Header ── */}
-      <nav className="flex items-center justify-between px-8 py-6 z-20">
-        <div className="flex items-center gap-2">
+    <main className="min-h-screen bg-slate-50 flex flex-col font-sans">
+      
+      {/* ── Top Navigation / Header ── */}
+      <nav className="bg-white flex items-center justify-between px-8 py-5 border-b border-slate-100 shadow-sm z-20 relative">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <span className="text-white font-black">E</span>
+            <span className="text-white font-black text-xl">S</span>
           </div>
-          <span className="text-2xl font-black text-slate-800 tracking-tighter">EcoTextil</span>
+          <div>
+            <span className="text-xl font-black text-slate-800 tracking-tight block leading-none">SAEG Monastir</span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Audit & Blockchain</span>
+          </div>
         </div>
         <div className="hidden md:flex gap-8 text-xs font-bold text-slate-400 uppercase tracking-widest">
-          <a href="#" className="hover:text-emerald-500 transition-colors">Vision</a>
-          <a href="#" className="hover:text-emerald-500 transition-colors">Partenaires</a>
-          <a href="#" className="hover:text-emerald-500 transition-colors">Ressources</a>
+          <a href="#" className="hover:text-emerald-500 transition-colors">Portail Web3</a>
+          <a href="#" className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Réseau Actif</a>
         </div>
-        <button 
-          onClick={() => setActiveNode('account')}
-          className="px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-full hover:bg-emerald-600 transition-all shadow-xl"
-        >
-          Espace Industriel
-        </button>
       </nav>
 
-      {/* ── Hero Section ── */}
-      <div className="flex-1 flex flex-col lg:flex-row items-center px-8 lg:px-20 gap-10 z-10">
-        
-        {/* Left: Branding & Copy */}
-        <div className="w-full lg:w-1/2 space-y-8 py-10">
-          <div className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-[0.3em] rounded-full">
-            Hackathon Monastir 2026
+      {/* ── Hero & 3D Interactive Simulation ── */}
+      <div className="bg-white px-8 py-10 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between border-b border-slate-100 shadow-sm z-10 w-full min-h-[600px] lg:h-[600px]">
+        {/* Decorative Background */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-emerald-50/50 rounded-l-full -z-10" />
+
+        <div className="max-w-2xl z-10">
+          <div className="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 border border-emerald-200">
+            Tableau de Bord Décisionnel
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-slate-900 leading-[0.9] tracking-tighter">
-            Smart <br />
-            <span className="eco-gradient">Audit.</span>
+          <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[0.95] tracking-tighter">
+            Contrôle <br />
+            Environnemental <br />
+            <span className="eco-gradient">Immuable & IA.</span>
           </h1>
-          <p className="text-xl text-slate-500 font-medium max-w-md leading-relaxed">
-            Surveillance intelligente de la pollution textile : <span className="text-emerald-500 font-bold">eau, air, sol.</span>
+          <p className="text-base text-slate-500 font-medium mt-6 leading-relaxed max-w-lg">
+            Évaluez le rendement journalier, trackez les émissions via IoT et prélevez la taxe Blockchain immédiatement. Cliquez sur une usine sur la carte pour commencer.
           </p>
           
-          <div className="flex items-center gap-4 pt-4">
-            <button 
-              onClick={() => setActiveNode('audit')}
-              className="px-8 py-4 bg-emerald-500 text-white font-black rounded-2xl shadow-2xl shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-all"
-            >
-              Lancer un Audit IPT
+          <div className="flex gap-4 mt-10">
+            <button className="px-8 py-4 bg-emerald-500 text-white font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl shadow-emerald-500/20 hover:bg-emerald-600 transition-all hover:-translate-y-1 active:scale-95">
+              Explorer le Réseau
             </button>
-            <div className="flex -space-x-3">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200" />
-              ))}
-              <div className="pl-6 text-xs font-bold text-slate-400">
-                +45 Unités auditées à Monastir
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6 pt-10">
-            <div className="glass-panel p-4 border-slate-100">
-              <p className="text-2xl font-black text-slate-800">92%</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Précision LSTM</p>
-            </div>
-            <div className="glass-panel p-4 border-slate-100">
-              <p className="text-2xl font-black text-slate-800">Real-time</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Suivi Blockchain</p>
-            </div>
+            <button className="px-8 py-4 bg-white text-slate-800 font-black uppercase text-xs tracking-widest rounded-2xl shadow-xl border border-slate-100 hover:bg-slate-50 transition-all hover:-translate-y-1 active:scale-95">
+              Documentation AI
+            </button>
           </div>
         </div>
 
-        {/* Right: 3D Scene */}
-        <div className="w-full lg:w-1/2 h-[600px] relative rounded-[40px] overflow-hidden lg:shadow-2xl lg:shadow-emerald-500/10">
-          <Scene onNodeClick={(node) => setActiveNode(node)} />
-          
-          {/* 3D Floating Caption */}
-          <div className="absolute bottom-10 left-10 glass-panel p-6 max-w-xs animate-float">
-            <h4 className="font-bold text-slate-800 text-sm mb-1 uppercase">Infrastructure SAEG</h4>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Explorez les modules en cliquant sur les sphères interactives.
-            </p>
-          </div>
+        {/* The requested "White interactive 3D simulation" */}
+        <div className="w-full lg:w-[600px] h-[500px] lg:h-full relative z-0 mt-8 lg:mt-0 lg:absolute lg:right-0">
+           <Scene onNodeClick={(node) => {
+             setActiveFactory(null)
+             setActiveNode(node)
+           }} />
+           <div className="absolute top-10 right-10 glass-panel p-4 z-20">
+             <div className="flex items-center gap-2 mb-2">
+               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+               <span className="text-[10px] uppercase font-bold text-slate-600 tracking-widest">Modèle LSTM Actif</span>
+             </div>
+             <p className="text-[9px] text-slate-400 font-medium max-w-[150px]">Précision de détection des anomalies : 98.4%</p>
+           </div>
         </div>
       </div>
 
-      {/* ── Footer ── */}
-      <footer className="px-8 py-10 bg-slate-50 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="flex flex-col items-center md:items-start gap-2">
-           <p className="text-sm font-bold text-slate-800 italic">EcoTextil Monastir</p>
-           <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono">Université de Monastir — Palais des Sciences</p>
+      {/* ── Split Screen Dashboard (Map Left, Data Right) ── */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 p-6 min-h-[85vh]">
+        
+        {/* Left: Map Layer */}
+        <div className="w-full lg:w-[60%] h-[500px] lg:h-auto rounded-[40px] overflow-hidden shadow-2xl border border-slate-200 relative bg-white group transition-all duration-500 hover:border-emerald-200">
+          <MapMonastir onFactoryClick={(factory) => {
+            setActiveFactory(factory)
+            setActiveNode('factory_details')
+          }} />
+          
+          <div className="absolute bottom-6 left-6 z-10 glass-panel p-4 pointer-events-none group-hover:translate-x-2">
+            <p className="text-[10px] font-black uppercase text-emerald-600 mb-1">Système de Cartographie</p>
+            <p className="text-xs text-slate-500">Visualisation IoT en temps réel</p>
+          </div>
         </div>
-        <div className="flex gap-8 text-xs font-bold text-slate-400 uppercase tracking-widest">
-          <a href="#" className="hover:text-emerald-500 transition-colors">GitHub</a>
-          <a href="#" className="hover:text-emerald-500 transition-colors">Documentation</a>
-          <a href="#" className="hover:text-emerald-500 transition-colors">LinkedIn</a>
+
+        {/* Right: Permanent Sidebar Dashboard */}
+        <div className="w-full lg:w-[40%] h-[600px] lg:h-auto animate-fade-in">
+          <Sidebar 
+            activeNode={activeNode} 
+            activeFactory={activeFactory}
+            onClose={() => { setActiveNode(null); setActiveFactory(null); }} 
+          />
         </div>
-      </footer>
+
+      </div>
+
     </main>
   )
 }
+

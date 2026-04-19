@@ -14,12 +14,20 @@ app.use(express.json());
 
 // --- GLOBAL STATE ---
 let systemAccount = null;
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://ai-service:8000';
+const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+const GANACHE_URL = process.env.GANACHE_URL || 'http://localhost:8545';
 
 // SAEG Formula Constants
 const CO2_WEIGHT = 0.25;
 const WATER_WEIGHT = 0.50;
 const WASTE_WEIGHT = 0.25;
+
+// --- IOT SIMULATOR (Capstone) ---
+const IoTSimulator = require('./iotSimulator');
+const ioTDamemon = new IoTSimulator(GANACHE_URL, AI_SERVICE_URL);
+
+// Start the 5-sec simulation loop for Hackathon Demo
+ioTDamemon.start();
 
 // --- FIREBASE INITIALIZATION ---
 const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || './config/firebase-service-account.json';
@@ -110,6 +118,11 @@ app.get('/api/blockchain/info', async (req, res) => {
   }
 });
 
+// Endpoint serving the live IoT Map data
+app.get('/api/factories', (req, res) => {
+  res.json(ioTDamemon.FACTORY_STATES || ioTDamemon.FACTORES_STATUS || ioTDamemon.getFactoresStatus());
+});
+
 // --- SAEG SPECIFIC ENDPOINTS ---
 
 /**
@@ -174,24 +187,21 @@ app.post('/api/saeg/audit', async (req, res) => {
 });
 
 /**
- * Calls the AI Service for risk prediction
+ * Triggers the Satellite Vision Audit
  */
-app.post('/api/saeg/predict', async (req, res) => {
-  const { history, sensor_type } = req.body;
+app.post('/api/saeg/satellite', async (req, res) => {
+  const { image_name } = req.body;
 
   try {
-    // Call the AI Service (FastAPI)
-    const response = await fetch(`${AI_SERVICE_URL}/predict`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ history, sensor_type })
+    const response = await fetch(`${AI_SERVICE_URL}/analyze-satellite?image_name=${image_name || ''}`, {
+      method: 'GET'
     });
 
-    const prediction = await response.json();
-    res.json(prediction);
+    const analysis = await response.json();
+    res.json(analysis);
   } catch (error) {
-    console.error('AI Prediction Error:', error);
-    res.status(500).json({ error: 'AI Service Unreachable' });
+    console.error('Satellite AI Error:', error);
+    res.status(500).json({ error: 'AI Satellite Service Unreachable' });
   }
 });
 

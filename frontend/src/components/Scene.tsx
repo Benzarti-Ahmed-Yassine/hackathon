@@ -93,6 +93,13 @@ export default function Scene({ onNodeClick }: { onNodeClick: (key: string) => v
           label="Conseil Expert" 
           onClick={() => onNodeClick('chat')} 
         />
+        <InteractibleNode 
+          position={[0, 4, -2]} 
+          color="#6366f1" 
+          icon="🛰️" 
+          label="Vision Satellite" 
+          onClick={() => onNodeClick('satellite')} 
+        />
 
         <ContactShadows resolution={1024} scale={20} blur={2.5} opacity={0.1} far={20} color="#10b981" />
         <Environment preset="forest" />
